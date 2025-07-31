@@ -1,24 +1,25 @@
 # fpga-tetris-basys3
 
-# 🧠 Tetris on FPGA — Hardware Game Engine (Basys 3)
+# Tetris on FPGA – Basys 3 Board
 
-A complete hardware implementation of the classic **Tetris** game, developed entirely in **SystemVerilog** and deployed on the **Basys 3 (Artix-7) FPGA**. This project showcases digital design skills, pipelined VGA signal generation, hardware-accelerated state machines, and real-time input handling — without any processor or software intervention.
+A fully playable version of the classic Tetris game implemented in **Verilog/SystemVerilog** on the **Digilent Basys 3 FPGA board** using **VGA output** and **7-segment display scorekeeping**. This project demonstrates fundamental digital design, hardware control, and real-time display integration.
 
 ---
 
-## 🚀 Key Highlights
+## 🔧 Features
 
-- ✅ **Designed and implemented** all game logic in RTL (no CPU, no software)
-- 🧩 **Modular architecture**: clean separation between VGA, control logic, input, and rendering
-- 🎮 Real-time control using Basys 3 pushbuttons
-- 🎨 Hardware-rendered 2D graphics over **VGA at 640x480 @ 60Hz**
-- 🧵 Fully synchronous FSM for game timing, collision, and rendering
-- 🧪 Developed simulation testbenches for critical components
+- 🎮 Tetris game engine written in SystemVerilog
+- 🖥️ VGA controller for real-time video display at 640x480 resolution
+- 🔲 Grid logic and block collision detection
+- 🔁 Clock divider for timing control
+- 🧠 FSM-based game control logic
+- ✅ Score is calculated in real-time as rows are cleared
+- 🔢 **Live score is shown on the board’s 4-digit 7-segment display**
+- 🎯 Modular and testable design using simulation and behavioral testing
 
 ---
 
 ## 🧠 Learning Objectives
-
 > ✅ **Goal**: Demonstrate complete digital system design workflow — from architecture to synthesis and deployment — using an FPGA development board.
 
 **Skills Developed:**
@@ -31,24 +32,41 @@ A complete hardware implementation of the classic **Tetris** game, developed ent
 - Simulation and waveform debugging (GTKWAVE/ModelSim)
 - Git-based project management and documentation
 
+## 🧱 Hardware Requirements
+
+- Digilent **Basys 3** FPGA board (Artix-7)
+- VGA monitor + VGA cable
+- Micro USB cable for programming the board
+
 ---
 
-## 📦 Project Structure
+## 🛠️ Tools Used
 
-tetris-fpga/
-├── src/ # SystemVerilog source files
-│ ├── top_module.sv
-│ ├── vga_controller.sv
-│ ├── tetris_logic.sv
-│ ├── grid_display.sv
-│ ├── debounce.sv
-│ └── clock_divider.sv
-├── constraints/ # Basys 3 XDC file for pin assignments
-│ └── basys3.xdc
-├── sim/ # Testbenches and simulation files
-│ └── ...
-├── docs/ # Design diagrams and architecture references
-│ └── block_diagram.png
+- **Vivado** (Xilinx) for synthesis and implementation
+- **VSCode** for HDL development
+- **GTKWave** for simulation (optional)
+- Git + GitHub for version control
+
+---
+
+## 📁 Project Structure
+
+fpga-tetris/
+│
+├── src/ # Verilog/SystemVerilog source files
+│ ├── top_module.sv # Top-level module
+│ ├── vga_controller.sv # VGA timing generator
+│ ├── clock_divider.sv # Generates slower clocks for logic/VGA
+│ ├── tetris_logic.sv # Core gameplay mechanics
+│ ├── block_renderer.sv # Drawing blocks and grid
+│ ├── score_display.sv # Score tracking logic
+│ ├── segment_decoder.sv # Converts digits to 7-segment format
+│
+├── constraints/
+│ └── basys3.xdc # Pin mappings (VGA, buttons, segments, etc.)
+│
+├── sim/ # Testbenches (planned)
+│
 ├── README.md
 └── .gitignore
 
@@ -99,39 +117,31 @@ tetris-fpga/
 
 ---
 
-## 🎯 Success Criteria
+## 🧪 How the Score Display Works
 
-- [x] Functional VGA display with stable timing
-- [x] Working FSM with falling blocks and controls
-- [x] Grid memory for storing block states
-- [x] Debounced user input controls
-- [x] Line clear detection and game over state
-- [ ] Add scoring (via 7-segment or VGA overlay)
-- [ ] Improve rotation collision edge cases
+- A **`score_display` module** keeps track of points earned.
+- Each cleared line updates the score counter.
+- The score is decoded into 4 BCD digits and passed to the **`segment_decoder`**.
+- The Basys 3's 7-segment display is **multiplexed** to show the 4-digit score in real-time.
 
 ---
 
-## 📸 Media (To Be Added)
+## 📈 Goals
 
-- Tetris running live on Basys 3 board
-- Demo video with game footage
-- Architecture block diagram
-
----
-
-## 📚 References
-
-- [Basys 3 Reference Manual](https://digilent.com/reference/programmable-logic/basys-3/start)
-- Ben Eater’s VGA videos (YouTube)
-- Xilinx Vivado Documentation
-- Tetris Wiki for rotation systems
+- ✔️ Understand digital design and game logic in hardware
+- ✔️ Practice FSM design, display interfacing, and I/O timing
+- ✔️ Build a standout portfolio project for job/internship applications
 
 ---
 
-## 📜 License
+## 📸 Screenshots (Coming Soon)
 
-This project is licensed under the MIT License — see `LICENSE` for details.
+- Game rendering on VGA
+- Score updates on 7-segment
+- Win/loss state visuals
 
 ---
 
-> 🧠 **Note**: This project was created to demonstrate proficiency in digital logic, SoC-level integration, and hardware implementation of real-time systems. Designed to stand out on a technical resume and in FPGA/digital
+## License
+
+MIT License
