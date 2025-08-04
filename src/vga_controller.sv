@@ -1,11 +1,11 @@
 module vga_controller(
-    input wire clk;
-    input wire rst;
-    output reg hsync;
-    output reg vsync;
-    output reg [9:0] x_pos;
-    output reg [9:0] y_pos;
-    output reg active;
+    input wire clk,
+    input wire rst,
+    output reg hsync,
+    output reg vsync,
+    output reg [9:0] x_pos,
+    output reg [9:0] y_pos,
+    output reg active
 )
 
 localparam H_VIS = 640;

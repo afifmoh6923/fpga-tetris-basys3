@@ -1,7 +1,7 @@
 module debounce (
-    input wire clk;
-    input wire noisy;
-    output logic clean;
+    input wire clk,
+    input wire noisy,
+    output logic clean,
 )
 
 logic [2:0] shift_reg;

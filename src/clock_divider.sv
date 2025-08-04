@@ -1,6 +1,6 @@
 module clock_divider (parameter DIVIDE_BY = 4)(
-    input logic fast_clock;
-    output logic slow_clock;
+    input logic fast_clock,
+    output logic slow_clock,
 )
 
 logic [$clog2(DIVIDE_BY) - 1:0] counter = 0;
