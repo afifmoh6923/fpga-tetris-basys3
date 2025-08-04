@@ -16,7 +16,7 @@ logic active;
 clock_divider clk_div(
     .clk(clk),
     .rst(rst),
-)
+);
 
 vga_controller dsply(
     .clk(fast_clk),
@@ -26,7 +26,7 @@ vga_controller dsply(
     .x_pos(x_pos),
     .y_pos(y_pos),
     .active(active)
-)
+);
 
 always @(*) begin
     if (active) begin
