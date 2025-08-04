@@ -15,7 +15,7 @@ logic active;
 
 clock_divider clk_div(
     .clk(clk),
-    .rst(rst),
+    .rst(rst)
 );
 
 vga_controller dsply(
