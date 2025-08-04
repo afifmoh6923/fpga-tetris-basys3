@@ -1,4 +1,4 @@
-module clock_divider (parameter DIVIDE_BY = 4)(
+module clock_divider #(parameter DIVIDE_BY = 4)(
     input logic fast_clock,
     output logic slow_clock,
 )
