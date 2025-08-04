@@ -1,8 +1,8 @@
 module debounce (
     input wire clk,
     input wire noisy,
-    output logic clean,
-)
+    output logic clean
+);
 
 logic [2:0] shift_reg;
 
@@ -11,3 +11,5 @@ always @(posedge clk) begin
 end
 
 assign clean = (shift_reg == 3'b111) ? 1 : 0;
+
+endmodule
