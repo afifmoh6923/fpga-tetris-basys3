@@ -30,18 +30,18 @@ vga_controller dsply(
 always_comb begin
     if (active) begin
         if(x_pos < 10 || x_pos > 630 || y_pos < 10 || y_pos > 470) begin
-            red = 4'hF;
-            green = 4'h0;
-            blue = 4'h0; // Background color
+            vga_red = 4'hF;
+            vga_green = 4'h0;
+            vga_blue = 4'h0; // Background color
         end else begin
-            red = 4'hF; // Example color for active area
-            green = 4'hF;
-            blue = 4'hF;
+            vga_red = 4'hF; // Example color for active area
+            vga_green = 4'hF;
+            vga_blue = 4'hF;
         end
     end else begin
-        red = 4'h0; // Inactive area color
-        green = 4'h0;
-        blue = 4'h0;
+        vga_red = 4'h0; // Inactive area color
+        vga_green = 4'h0;
+        vga_blue = 4'h0;
     end
 end
 
