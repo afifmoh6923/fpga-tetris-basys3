@@ -3,8 +3,8 @@
 # SW Build 6140274 on Thu May 22 00:12:29 MDT 2025
 # IP Build 6138677 on Thu May 22 03:10:11 MDT 2025
 # SharedData Build 6139179 on Tue May 20 17:58:58 MDT 2025
-# Start of session at: Mon Aug  4 17:30:36 2025
-# Process ID         : 14904
+# Start of session at: Mon Aug  4 18:54:49 2025
+# Process ID         : 38888
 # Current directory  : C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/tetris_fpga.runs/synth_1
 # Command line       : vivado.exe -log top_module.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source top_module.tcl
 # Log file           : C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/tetris_fpga.runs/synth_1/top_module.vds
@@ -17,8 +17,8 @@
 # CPU Physical cores : 8
 # CPU Logical cores  : 16
 # Host memory        : 16312 MB
-# Swap memory        : 9663 MB
-# Total Virtual      : 25976 MB
-# Available Virtual  : 3730 MB
+# Swap memory        : 15062 MB
+# Total Virtual      : 31374 MB
+# Available Virtual  : 6097 MB
 #-----------------------------------------------------------
 source top_module.tcl -notrace

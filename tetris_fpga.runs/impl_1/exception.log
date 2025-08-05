@@ -1,4 +1,0 @@
-ERROR: Exception caught trying to open file C:\Users\patsn\OneDrive\Documents\fpga-projects\fpga-tetris-basys3\tetris_fpga.runs\impl_1/runme.log
-	Exception name: Error
-	Exception error code: 70
-	Exception message: Permission denied

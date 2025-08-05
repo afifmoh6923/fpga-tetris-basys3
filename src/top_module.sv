@@ -12,7 +12,7 @@ logic [9:0] x_pos;
 logic [9:0] y_pos;
 logic active;
 
-clock_divider clk_div(
+clock_divider #(.DIVIDE_BY(4)) clk_div(
     .fast_clock(clk),
     .slow_clock(slw)
 );
