@@ -1,7 +1,8 @@
 # compile verilog/system verilog design source files
 sv xil_defaultlib  --include "../../../../../../../../../../Xilinx/2025.1/Vivado/data/rsb/busdef" \
-"../../../../src/vga_controller.sv" \
-"../../../../sim/vga_controller_tb.sv" \
+"../../../../src/score_display.sv" \
+"../../../../src/segment_decoder.sv" \
+"../../../../sim/score_display_tb.sv" \
 
 # compile glbl module
 verilog xil_defaultlib "glbl.v"

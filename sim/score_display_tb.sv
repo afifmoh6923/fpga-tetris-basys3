@@ -18,11 +18,11 @@ module score_display_tb;
 
   // Instantiate the score display module
   score_display uut (
-    .clk(clk),
+    .slw_clk(clk),
     .rst(rst),
     .score(score),
-    .an(an),
-    .seg(seg)
+    .an_cntrl(an),
+    .seg_cntrl(seg)
   );
 
   // Clock generator block
