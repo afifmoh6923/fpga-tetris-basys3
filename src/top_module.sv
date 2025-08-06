@@ -6,7 +6,7 @@ module top_module (
     output logic vga_vsync,
     output logic [3:0] vga_red,
     output logic [3:0] vga_green,
-    output logic [3:0] vga_blue
+    output logic [3:0] vga_blue,
     output logic [3:0] an,
     output logic [6:0] seg
 );
@@ -32,22 +32,22 @@ debounce db_up(
     .clk(clk),
     .noisy(btnU),
     .clean(up_clean)
-)
+);
 debounce db_down(
     .clk(clk),
     .noisy(btnD),
     .clean(down_clean)
-)
+);
 debounce db_left(
     .clk(clk),
     .noisy(btnL),
     .clean(left_clean)
-)
+);
 debounce db_right(
     .clk(clk),
     .noisy(btnR),
     .clean(right_clean)
-)
+);
 
 logic [9:0] x_pos;
 logic [9:0] y_pos;
@@ -91,7 +91,7 @@ tetris_logic game(
     .rott(up_clean),
     .grid(game_grid_array),
     .score(score)
-)
+);
 
 always_comb begin
     if (active_video) begin

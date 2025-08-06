@@ -19,8 +19,10 @@ reg [3:0] active_x;
 reg [4:0] active_y;
 reg [4:0] fall_timer_counter;
 logic fall_tick;
+logic [3:0] active_color;
+logic [15:0] shape_map;
 
-function logic [15:0] get_shape([2:0] piece_type, [1:0] piece_rot);
+function logic [15:0] get_shape(input [2:0] piece_type, input [1:0] piece_rot);
     // Return the shape of the piece based on its type and rotation
     // This function should return a 4x4 array representing the piece)
     // Each 4 bits represent a row of the piece
@@ -32,7 +34,7 @@ function logic [15:0] get_shape([2:0] piece_type, [1:0] piece_rot);
                 default: get_shape = 16'b0000000000000000;
             endcase
         end
-        3'b001; begin // O
+        3'b001: begin // O
             case(piece_rot)
                 default: get_shape = 16'b0000011001100000; // Square, no rotation
             endcase
@@ -82,15 +84,15 @@ function logic [15:0] get_shape([2:0] piece_type, [1:0] piece_rot);
     endcase 
 endfunction
 
-function boolean check_collision([2:0] piece_type, [1:0]piece_rot, [3:0] piece_x, [4:0] piece_y);
+function boolean check_collision(input [2:0] piece_type, input [1:0]piece_rot, input[3:0] piece_x, input [4:0] piece_y);
     // Check if the piece collides with the grid or goes out of bounds
     // This function should return 1 if there is a collision, 0 otherwise
-    logic [15:0] shape_map = get_shape(piece_type, piece_rot);
-    for (int i = 0; i < 4; i + 1) begin
-        for (int j = 0; j < 4; j + 1) begin
+    shape_map = get_shape(piece_type, piece_rot);
+    for (int i = 0; i < 4; i++) begin
+        for (int j = 0; j < 4; j++) begin
             if(shape_map[i*4 + j]) begin
-                int grid_x = piece_x + j;
-                int grid_y = piece_y + i;
+                automatic int grid_x = piece_x + j;
+                automatic int grid_y = piece_y + i;
                 if (grid_x < 0 || grid_x > 9 || grid_y < 0 || grid_y > 19) begin
                     return 1; // Out of bounds
                 end
@@ -103,7 +105,7 @@ function boolean check_collision([2:0] piece_type, [1:0]piece_rot, [3:0] piece_x
     return 0;
 endfunction
 
-always_ff @(posedge gm_clk || posedge gm_rst) begin
+always_ff @(posedge gm_clk or posedge gm_rst) begin
     if(fall_timer_counter == FALL_SPEED - 1) begin
         fall_timer_counter <= 0;
         fall_tick <= 1;
@@ -131,7 +133,7 @@ always_ff @(posedge gm_clk || posedge gm_rst) begin
             end
             3'b001: begin //SPAWN
                 active_block <= $urandom_range(0,6);
-                active_x <= 4'b4; // Center the block
+                active_x <= 4'b0100; // Center the block
                 active_y <= 5'b0; // Start at the top
                 if(check_collision(active_block, rotate, active_x, active_y)) begin
                     gm_state <= 3'b100;
@@ -162,7 +164,7 @@ always_ff @(posedge gm_clk || posedge gm_rst) begin
                     if (!(check_collision(active_block, rotate, active_x, next_y))) begin
                         active_y = next_y;
                     end else begin
-                        logic [15:0] shape_map = get_shape(active_block, rotate);
+                        shape_map = get_shape(active_block, rotate);
                         for (int i = 0; i < 4; i++) begin
                             for (int j = 0; j < 4; j++) begin
                                 if(shape_map[i*4 + j]) begin
@@ -175,9 +177,9 @@ always_ff @(posedge gm_clk || posedge gm_rst) begin
                     end
             end
             3'b011: begin //CLEAR LINE
-                int cleared = 0;
+                automatic int cleared = 0;
                 for(int i = 0; i < 20; i++) begin
-                    boolean complete = 1;
+                    automatic boolean complete = 1;
                     for(int j = 0; j < 10; j++) begin
                         if(gm_memory[i][j] == 4'b0000) begin
                             complete = 0;
@@ -212,7 +214,6 @@ end
 always_comb begin
     logic [3:0] temp_grid [19:0][9:0];
     temp_grid = gm_memory;
-    logic active_color;
 
     case(active_block)
         3'b000: active_color = 4'b0001; // I
@@ -225,7 +226,7 @@ always_comb begin
         default: active_color = 4'b0000; // Empty
     endcase
 
-    logic [15:0] shape_map = get_shape(active_block, rotate);
+    shape_map = get_shape(active_block, rotate);
     if(gm_state == 3'b001 || gm_state == 3'b010) begin
         for (int i = 0; i < 4; i++) begin
             for (int j = 0; j < 4; j++) begin
