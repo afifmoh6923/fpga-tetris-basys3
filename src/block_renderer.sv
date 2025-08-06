@@ -11,9 +11,9 @@ parameter GRID_WIDTH = 240;
 parameter GRID_HEIGHT = 480;
 parameter GRID_BORDER = 4;
 
-logic [4:0] cell_x;
+logic [3:0] cell_x;
 assign cell_x = (curr_pix_x - GRID_START_X) / BLOCK_SIZE;
-logic [3:0] cell_y;
+logic [4:0] cell_y;
 assign cell_y = curr_pix_y / BLOCK_SIZE;
 
 always_comb begin

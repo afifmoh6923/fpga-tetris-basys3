@@ -82,6 +82,17 @@ block_renderer renderer(
     .pixel_color(rgb)
 );
 
+tetris_logic game(
+    .gm_clk(clk_60hz),
+    .gm_rst(rst),
+    .left(left_clean),
+    .right(right_clean),
+    .down(down_clean),
+    .rott(up_clean),
+    .grid(game_grid_array),
+    .score(score)
+)
+
 always_comb begin
     if (active_video) begin
         vga_red   = rgb[11:8];
