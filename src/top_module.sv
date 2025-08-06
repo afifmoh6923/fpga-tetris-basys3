@@ -84,9 +84,9 @@ block_renderer renderer(
 
 always_comb begin
     if (active_video) begin
-        vga_red   = rgb_from_renderer[11:8];
-        vga_green = rgb_from_renderer[7:4];
-        vga_blue  = rgb_from_renderer[3:0];
+        vga_red   = rgb[11:8];
+        vga_green = rgb[7:4];
+        vga_blue  = rgb[3:0];
     end else begin
         vga_red   = 4'h0;
         vga_green = 4'h0;

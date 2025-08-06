@@ -15,14 +15,61 @@ reg [3:0] gm_memory [19:0][9:0];
 
 reg [2:0] active_block;
 reg [1:0] rotate;
-reg [3:0] active_x;
-reg [4:0] active_y;
+reg [4:0] active_x;
+reg [3:0] active_y;
 reg [4:0] fall_timer_counter;
 logic fall_tick;
 
-function check_collision
-function get_shape
+function logic [15:0] get_shape([2:0] piece_type, [1:0] piece_rot);
+    // Return the shape of the piece based on its type and rotation
+    // This function should return a 4x4 array representing the piece)
+    case(piece_type) begin
+        3'b000: begin // I
+            case(piece_rot) begin
+                2'b00, 2'b10: get_shape = 16'b0000111100000000; // Horizontal
+                2'b01, 2'b11: get_shape = 16'b0010001000100010; // Vertical
+                default: get_shape = 16'b0000000000000000;
+            endcase
+        end
+        3'b001; begin // O
+            case(piece_rot)
+                default: get_shape = 16'b0000011001100000; // Square, no rotation
+            endcase
+        end
+        3'b010: begin // T
+            case(piece_rot)
+                2'b00: get_shape = 16'b1110010000000000;
+                2'b01: get_shape = 16'b0001001100010000;
+                2'b10: get_shape = 16'b0000000000100111;
+                2'b11: get_shape = 16'b0000100011001000;
+                default: get_shape = 16'b0000000000000000;
+            endcase
+        end
+        3'b011: begin // L
+            case(piece_rot)
+                2'b00: get_shape = 16'b1000100011000000;
+                2'b01: get_shape = 16'b0111010000000000;
+                2'b10: get_shape = 16'b0000001100010001;
+                2'b11: get_shape = 16'b0000000000010111;
+                default: get_shape = 16'b0000000000000000;
+            endcase
+        end
+        3'b100: begin // J
 
+
+
+
+
+
+function boolean check_collision([2:0] piece_type, [1:0]piece_rot, [4:0] piece_x, [3:0] piece_y);
+    // Check if the piece collides with the grid or goes out of bounds
+    // This function should return 1 if there is a collision, 0 otherwise
+    logic [15:0] shape_map = get_shape(piece_type, piece_rot);
+    for (int i = 0; i < 4; i + 1) begin
+        for (int j = 0; j < 4; j + 1) begin
+            if (shape_map[i][j] )
+        end
+    end
 
 always_ff @(posedge gm_clk || posedge gm_rst) begin
     if(fall_timer_counter == FALL_SPEED - 1) begin
