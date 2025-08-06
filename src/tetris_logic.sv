@@ -21,6 +21,7 @@ reg [4:0] fall_timer_counter;
 logic fall_tick;
 logic [3:0] active_color;
 logic [15:0] shape_map;
+logic [15:0] shape_map1;
 
 function logic [15:0] get_shape(input [2:0] piece_type, input [1:0] piece_rot);
     // Return the shape of the piece based on its type and rotation
@@ -84,7 +85,7 @@ function logic [15:0] get_shape(input [2:0] piece_type, input [1:0] piece_rot);
     endcase 
 endfunction
 
-function boolean check_collision(input [2:0] piece_type, input [1:0]piece_rot, input[3:0] piece_x, input [4:0] piece_y);
+function logic check_collision(input [2:0] piece_type, input [1:0]piece_rot, input[3:0] piece_x, input [4:0] piece_y);
     // Check if the piece collides with the grid or goes out of bounds
     // This function should return 1 if there is a collision, 0 otherwise
     shape_map = get_shape(piece_type, piece_rot);
@@ -93,7 +94,7 @@ function boolean check_collision(input [2:0] piece_type, input [1:0]piece_rot, i
             if(shape_map[i*4 + j]) begin
                 automatic int grid_x = piece_x + j;
                 automatic int grid_y = piece_y + i;
-                if (grid_x < 0 || grid_x > 9 || grid_y < 0 || grid_y > 19) begin
+                if (grid_x < 0 || grid_x > 9 || grid_y > 19) begin
                     return 1; // Out of bounds
                 end
                 if (grid_y >= 0 && gm_memory[grid_y][grid_x] != 4'b0) begin
@@ -105,7 +106,7 @@ function boolean check_collision(input [2:0] piece_type, input [1:0]piece_rot, i
     return 0;
 endfunction
 
-always_ff @(posedge gm_clk or posedge gm_rst) begin
+always @(posedge gm_clk) begin
     if(fall_timer_counter == FALL_SPEED - 1) begin
         fall_timer_counter <= 0;
         fall_tick <= 1;
@@ -132,7 +133,8 @@ always_ff @(posedge gm_clk or posedge gm_rst) begin
                 gm_state <= 3'b001; // Move to next state
             end
             3'b001: begin //SPAWN
-                active_block <= $urandom_range(0,6);
+                active_block <= active_block + 1;
+                rotate <= 2'b00; // Reset rotation
                 active_x <= 4'b0100; // Center the block
                 active_y <= 5'b0; // Start at the top
                 if(check_collision(active_block, rotate, active_x, active_y)) begin
@@ -142,12 +144,9 @@ always_ff @(posedge gm_clk or posedge gm_rst) begin
                 end
             end
             3'b010: begin //FALLING
-                logic [3:0] next_x;
-                logic [4:0] next_y;
-                logic [1:0] next_rot;
-                assign next_x = active_x;
-                assign next_y = active_y;
-                assign next_rot = rotate;
+                automatic logic [3:0] next_x = active_x;
+                automatic logic [4:0] next_y = active_y;
+                automatic logic [1:0] next_rot = rotate;
                 if (left) begin
                     next_x = active_x -1;
                 end else if (right) begin
@@ -156,30 +155,32 @@ always_ff @(posedge gm_clk or posedge gm_rst) begin
                     next_rot = (rotate + 1) % 4; // Rotate the piece
                 end
                 if (!(check_collision(active_block, next_rot, next_x, active_y))) begin
-                    active_x = next_x;
-                    rotate = next_rot;
+                    active_x <= next_x;
+                    rotate <= next_rot;
                 end
                 if (fall_tick || down) begin
                     next_y = active_y + 1;
                     if (!(check_collision(active_block, rotate, active_x, next_y))) begin
-                        active_y = next_y;
+                        active_y <= next_y;
                     end else begin
                         shape_map = get_shape(active_block, rotate);
                         for (int i = 0; i < 4; i++) begin
                             for (int j = 0; j < 4; j++) begin
-                                if(shape_map[i*4 + j]) begin
-                                    gm_memory[active_y + i][active_x + j] <= active_block;
+                                if(shape_map[15 - (i*4) + j]) begin
+                                    if(active_y + i >= 0) begin
+                                        gm_memory[active_y + i][active_x + j] <= active_block;
+                                    end
                                 end
                             end
                         end
-                    end
                         gm_state <= 3'b011;
                     end
+                end
             end
             3'b011: begin //CLEAR LINE
                 automatic int cleared = 0;
                 for(int i = 0; i < 20; i++) begin
-                    automatic boolean complete = 1;
+                    automatic logic complete = 1;
                     for(int j = 0; j < 10; j++) begin
                         if(gm_memory[i][j] == 4'b0000) begin
                             complete = 0;
@@ -196,11 +197,7 @@ always_ff @(posedge gm_clk or posedge gm_rst) begin
                         gm_score <= gm_score + (cleared * 100); // Update score
                     end
                 end
-                if(cleared > 0) begin
-                    gm_state <= 3'b001; // Go back to spawn state
-                end else begin
-                    gm_state <= 3'b010; // Continue falling
-                end
+                gm_state <= 3'b001; // Go back to spawn state
             end
             3'b100: begin //GAME OVER
                 if(gm_rst) begin
@@ -226,7 +223,7 @@ always_comb begin
         default: active_color = 4'b0000; // Empty
     endcase
 
-    shape_map = get_shape(active_block, rotate);
+    shape_map1 = get_shape(active_block, rotate);
     if(gm_state == 3'b001 || gm_state == 3'b010) begin
         for (int i = 0; i < 4; i++) begin
             for (int j = 0; j < 4; j++) begin
@@ -239,8 +236,8 @@ always_comb begin
         end
     end
 
-    assign grid = temp_grid;
-    assign score = gm_score;
+    grid = temp_grid;
+    score = gm_score;
 end
 
 endmodule

@@ -1,6 +1,6 @@
 module segment_decoder (
-    input  wire [3:0] digit,
-    output wire [6:0] seg // CA to CG (active low)
+    input  logic [3:0] digit,
+    output logic [6:0] seg // CA to CG (active low)
 );
 
   always_comb begin

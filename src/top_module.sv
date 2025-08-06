@@ -14,20 +14,27 @@ module top_module (
 logic slw;
 logic clk_1khz;
 logic clk_60hz;
+logic up_clean, down_clean, left_clean, right_clean;
+logic [9:0] x_pos;
+logic [9:0] y_pos;
+logic active_video;
+logic [11:0] rgb;
+logic [3:0] game_grid_array [19:0][9:0]; // Example grid array
+logic [15:0] score;
+
 clock_divider #(.DIVIDE_BY(4)) vga_clk(
     .fast_clock(clk),
     .slow_clock(slw)
 );
-clock_divider #(.DIVIDE_BY(100000)) seg_clk(
+clock_divider #(.DIVIDE_BY(100_000)) seg_clk(
     .fast_clock(clk),
     .slow_clock(clk_1khz)
 );
-clock_divider #(.DIVIDE_BY(1666667)) game_clk(
+clock_divider #(.DIVIDE_BY(1_666_667)) game_clk(
     .fast_clock(clk),
     .slow_clock(clk_60hz)
 );
 
-logic up_clean, down_clean, left_clean, right_clean;
 debounce db_up(
     .clk(clk),
     .noisy(btnU),
@@ -49,14 +56,6 @@ debounce db_right(
     .clean(right_clean)
 );
 
-logic [9:0] x_pos;
-logic [9:0] y_pos;
-logic active;
-logic [11:0] rgb;
-
-logic [3:0] game_grid_array [19:0][9:0]; // Example grid array
-logic [15:0] score;
-
 vga_controller dsply(
     .clk(slw),
     .rst(rst),
@@ -64,7 +63,7 @@ vga_controller dsply(
     .vsync(vga_vsync),
     .x_pos(x_pos),
     .y_pos(y_pos),
-    .active(active)
+    .active(active_video)
 );
 
 score_display score_dsp(

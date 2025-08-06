@@ -44,7 +44,7 @@ always_comb begin
 end
 
 segment_decoder seg_dec(
-    .digig(dig),
+    .digit(dig),
     .seg(seg_cntrl)
 );
 
