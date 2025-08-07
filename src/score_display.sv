@@ -17,23 +17,31 @@ always @(posedge slw_clk or posedge rst) begin
 end
 
 logic [3:0] dig;
+logic [3:0] thousands, hundreds, tens, ones;
+
+always_comb begin
+    thousands = (score / 1000) % 10; // Most significant digit
+    hundreds = (score / 100) % 10;   // Second digit
+    tens = (score / 10) % 10;         // Third digit
+    ones = score % 10;                // Least significant digit
+end
 
 always_comb begin
     case(dig_sel)
         2'b00: begin
-            dig = score[3:0];   // Least significant digit
+            dig = ones;   // Least significant digit
             an_cntrl = 4'b1110; // Activate first digit
         end
         2'b01: begin
-            dig = score[7:4];   // Second digit
+            dig = tens;   // Second digit
             an_cntrl = 4'b1101; // Activate second digit
         end
         2'b10: begin
-            dig = score[11:8];  // Third digit
+            dig = hundreds;  // Third digit
             an_cntrl = 4'b1011; // Activate third digit
         end
         2'b11: begin
-            dig = score[15:12]; // Most significant digit
+            dig = thousands; // Most significant digit
             an_cntrl = 4'b0111; // Activate fourth digit
         end
         default: begin

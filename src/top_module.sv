@@ -13,7 +13,7 @@ module top_module (
 
 logic slw;
 logic clk_1khz;
-logic clk_60hz;
+logic clk_10hz;
 logic up_clean, down_clean, left_clean, right_clean;
 logic [9:0] x_pos;
 logic [9:0] y_pos;
@@ -32,7 +32,7 @@ clock_divider #(.DIVIDE_BY(100_000)) seg_clk(
 );
 clock_divider #(.DIVIDE_BY(1_666_667)) game_clk(
     .fast_clock(clk),
-    .slow_clock(clk_60hz)
+    .slow_clock(clk_10hz)
 );
 
 debounce db_up(
@@ -82,7 +82,7 @@ block_renderer renderer(
 );
 
 tetris_logic game(
-    .gm_clk(clk_60hz),
+    .gm_clk(clk_10hz),
     .gm_rst(rst),
     .left(left_clean),
     .right(right_clean),
