@@ -22,7 +22,10 @@ logic fall_tick;
 logic [3:0] active_color;
 logic [15:0] shape_map;
 logic [15:0] shape;
+logic [15:0] shape_map1;
 logic [4:0] lines_cleared;
+logic [19:0] rows_to_clear;
+int write_row;
 
 logic down_prev, left_prev, right_prev, rott_prev;
 logic down_edge, left_edge, right_edge, rott_edge;
@@ -46,6 +49,7 @@ always @(posedge gm_clk) begin
     end else begin
         lfsr <= {lfsr[5:0], lfsr[6] ^ lfsr[5]}; // LFSR feedback
     end
+end
 
 function logic [15:0] get_shape(input [2:0] piece_type, input [1:0] piece_rot);
     // Return the shape of the piece based on its type and rotation
@@ -161,75 +165,77 @@ always @(posedge gm_clk) begin
                 gm_state <= 3'b001; // Move to next state
             end
             3'b001: begin //SPAWN
-                active_block <= lsfr[2:0]; // Random block
+                active_block <= lfsr[2:0]; // Random block
                 rotate <= 2'b00; // Reset rotation
                 active_x <= 4'd3; // Center the block
                 active_y <= 5'd0; // Start at the top
-                if(check_collision(lsfr[2:0], 2'b00, 4'd3, 5'd0)) begin
-                    gm_state <= 3'b100;
+                if(check_collision(lfsr[2:0], 2'b00, 4'd3, 5'd0)) begin
+                    gm_state <= 3'b101;
                 end else begin
                     gm_state <= 3'b010;
                 end
             end
             3'b010: begin //FALLING
                 if (left_edge && !check_collision(active_block, rotate, active_x - 1, active_y)) begin
-                    next_x <= active_x -1;
+                    active_x <= active_x -1;
                 end else if (right_edge && !check_collision(active_block, rotate, active_x + 1, active_y)) begin
-                    next_x <= active_x + 1;
+                    active_x <= active_x + 1;
                 end else if (rott_edge && !check_collision(active_block, rotate + 1, active_x, active_y)) begin
-                    next_rot <= rotate + 1 // Rotate the piece
+                    rotate <= rotate + 1; // Rotate the piece
                 end
-                if (!(check_collision(active_block, next_rot, next_x, active_y))) begin
-                    active_x <= next_x;
-                    rotate <= next_rot;
-                end
+               
                 if (fall_tick || down_edge) begin
-                    if (!(check_collision(active_block, rotate, active_x, next_y))) begin
-                        active_y <= next_y;
+                    if (!(check_collision(active_block, rotate, active_x, active_y + 1))) begin
+                        active_y <= active_y + 1; // Move down
                     end else begin
                         gm_state <= 3'b011;
                     end
                 end
             end
-            3'b011: begin //CLEAR LINE
-                shape = get_shape(active_block, rotate);
+            3'b011: begin //LANDING
+                automatic logic [15:0] landed_shape = get_shape(active_block, rotate);
                 for (int i = 0; i < 4; i++) begin
                     for (int j = 0; j < 4; j++) begin
-                        if(shape[15 - (i*4 + j)]) begin
-                            if((active_y + i) >= 0 && (active_y + i) < 20 && (active_x + j) < 10) begin
-                                gm_memory[active_y + i][active_x + j] <= active_block + 1; // +1 so it's not zero
-                            end
+                        if (landed_shape[15 - (i*4) - j]) begin
+                            if (active_y + i >= 0)
+                                gm_memory[active_y + i][active_x + j] <= active_block + 1; // Use color code
                         end
                     end
                 end
-
-                lines_cleared = 0;
-                for(int i = 0; i < 20; i++) begin
-                    automatic logic complete = 1;
-                    for(int j = 0; j < 10; j++) begin
-                        if(gm_memory[i][j] == 4'b0000) begin
-                            complete = 0;
-                        end
-                    end
-                    if(complete) begin
-                        cleared = cleared + 1;
-                        for(int k = i; k > 0; k--) begin
-                            for(int j = 0; j < 10; j++) begin
-                                gm_memory[k][j] <= gm_memory[k-1][j];
-                            end
-                        end
-                        for(int col = 0; col < 10; col++) begin
-                            gm_memory[0][col] <= 4'b0000;
-                        end
-                        i = i - 1; // Recheck the same line
-                    end
-                end
-                if(cleared > 0) begin
-                    gm_score <= gm_score + (cleared * 100); // Update score
-                end
-                gm_state <= 3'b001; // Go back to spawn state
+                gm_state <= 3'b100;
             end
-            3'b100: begin //GAME OVER
+            3'b100: begin //CLEAR LINE
+                automatic logic [3:0] new_grid [19:0][9:0];
+                lines_cleared = 0;
+                write_row = 19; // Start writing from the bottom
+
+                for (int read_row = 19; read_row >= 0; read_row--) begin
+                        automatic logic line_full = 1'b1;
+                        for (int col = 0; col < 10; col++) begin
+                            if (gm_memory[read_row][col] == 4'h0) line_full = 1'b0;
+                        end
+                        if (!line_full) begin
+                            for (int col = 0; col < 10; col++) begin
+                                new_grid[write_row][col] = gm_memory[read_row][col];
+                            end
+                            write_row = write_row - 1;
+                        end else begin
+                            lines_cleared = lines_cleared + 1;
+                        end
+                    end
+                    for (int row = 0; row < 20; row++) begin
+                        // The 'if' statement provides the variable control.
+                        if (row <= write_row) begin
+                            for (int col = 0; col < 10; col++) begin
+                                new_grid[row][col] = 4'h0; // Clear the top rows
+                            end
+                        end
+                    end
+                    gm_memory <= new_grid;
+                    gm_score <= gm_score + (lines_cleared * 100);
+                    gm_state <= 3'b001; // Spawn new block
+                end
+            3'b101: begin //GAME OVER
                 if(gm_rst) begin
                     gm_state <= 3'b000; // Go to initialization on reset
                 end
@@ -242,7 +248,6 @@ end
 always_comb begin
     logic [3:0] temp_grid [19:0][9:0];
     temp_grid = gm_memory;
-    logic [15:0] shape_map1;
 
     case(active_block)
         3'b000: active_color = 4'b0001; // I
