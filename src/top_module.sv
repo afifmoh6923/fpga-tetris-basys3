@@ -30,7 +30,7 @@ clock_divider #(.DIVIDE_BY(100_000)) seg_clk(
     .fast_clock(clk),
     .slow_clock(clk_1khz)
 );
-clock_divider #(.DIVIDE_BY(1_666_667)) game_clk(
+clock_divider #(.DIVIDE_BY(10_000_000)) game_clk(
     .fast_clock(clk),
     .slow_clock(clk_10hz)
 );

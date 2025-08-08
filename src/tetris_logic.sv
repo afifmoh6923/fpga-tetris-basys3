@@ -23,7 +23,6 @@ logic [3:0] active_color;
 logic [15:0] shape_map;
 logic [15:0] shape;
 logic [15:0] shape_map1;
-logic [4:0] lines_cleared;
 logic [19:0] rows_to_clear;
 int write_row;
 
@@ -123,7 +122,7 @@ function logic check_collision(input [2:0] piece_type, input [1:0]piece_rot, inp
             if(shape_map[15 - (i*4 + j)]) begin
                 automatic int grid_x = piece_x + j;
                 automatic int grid_y = piece_y + i;
-                if (grid_x < 0 || grid_x > 9 || grid_y > 19) begin
+                if (grid_x < 0 || grid_x >= 10 || grid_y >= 20) begin
                     return 1; // Out of bounds
                 end
                 if (grid_y >= 0 && gm_memory[grid_y][grid_x] != 4'b0) begin
@@ -194,53 +193,65 @@ always @(posedge gm_clk) begin
             end
             3'b011: begin //LANDING
                 automatic logic [15:0] landed_shape = get_shape(active_block, rotate);
+                automatic logic [4:0] lines_cleared;
                 for (int i = 0; i < 4; i++) begin
                     for (int j = 0; j < 4; j++) begin
-                        if (landed_shape[15 - (i*4) - j]) begin
+                        if (landed_shape[15 - (i*4 + j)]) begin
                             if (active_y + i >= 0)
                                 gm_memory[active_y + i][active_x + j] <= active_block + 1; // Use color code
                         end
                     end
                 end
-                gm_state <= 3'b100;
-            end
-            3'b100: begin //CLEAR LINE
-                automatic logic [3:0] new_grid [19:0][9:0];
-                lines_cleared = 0;
-                write_row = 19; // Start writing from the bottom
 
+                lines_cleared = 0;
+                
+                // Compact grid by copying non-complete rows
+                write_row = 19;
                 for (int read_row = 19; read_row >= 0; read_row--) begin
-                        automatic logic line_full = 1'b1;
+                    logic line_complete = 1;
+                    
+                    // Check if this row is complete
+                    for (int col = 0; col < 10; col++) begin
+                        if (gm_memory[read_row][col] == 4'b0) begin
+                            line_complete = 0;
+                        end
+                    end
+                    
+                    if (!line_complete) begin
+                        // Keep this row - copy it to write position
                         for (int col = 0; col < 10; col++) begin
-                            if (gm_memory[read_row][col] == 4'h0) line_full = 1'b0;
+                            gm_memory[write_row][col] <= gm_memory[read_row][col];
                         end
-                        if (!line_full) begin
-                            for (int col = 0; col < 10; col++) begin
-                                new_grid[write_row][col] = gm_memory[read_row][col];
-                            end
-                            write_row = write_row - 1;
-                        end else begin
-                            lines_cleared = lines_cleared + 1;
-                        end
+                        write_row = write_row - 1;
+                    end else begin
+                        // This row is complete - don't copy it (effectively delete it)
+                        lines_cleared = lines_cleared + 1;
                     end
-                    for (int row = 0; row < 20; row++) begin
-                        // The 'if' statement provides the variable control.
-                        if (row <= write_row) begin
-                            for (int col = 0; col < 10; col++) begin
-                                new_grid[row][col] = 4'h0; // Clear the top rows
-                            end
-                        end
-                    end
-                    gm_memory <= new_grid;
-                    gm_score <= gm_score + (lines_cleared * 100);
-                    gm_state <= 3'b001; // Spawn new block
                 end
+                
+                // Clear the remaining top rows
+                for (int row = 0; row <= write_row; row++) begin
+                    for (int col = 0; col < 10; col++) begin
+                        gm_memory[row][col] <= 4'b0;
+                    end
+                end
+                
+                // Update score based on lines cleared
+                if (lines_cleared > 0) begin
+                    gm_score <= gm_score + (lines_cleared * lines_cleared * 100);
+                end
+                
+                gm_state <= 3'b001; // Spawn next piece
+            end
+                
             3'b101: begin //GAME OVER
                 if(gm_rst) begin
                     gm_state <= 3'b000; // Go to initialization on reset
                 end
             end
-            default: gm_state <= 3'b000; // Reset to initialization on unknown state
+            default: begin
+                gm_state <= 3'b000; // Reset to initialization on unknown state
+            end
         endcase
     end
 end
@@ -263,7 +274,7 @@ always_comb begin
         shape_map1 = get_shape(active_block, rotate);
         for (int i = 0; i < 4; i++) begin
             for (int j = 0; j < 4; j++) begin
-                if(shape_map[15 - (i*4 + j)]) begin
+                if(shape_map1[15 - (i*4 + j)]) begin
                     if(active_y + i < 20 && active_x + j < 10) begin
                         temp_grid[active_y + i][active_x + j] = active_color;
                     end
