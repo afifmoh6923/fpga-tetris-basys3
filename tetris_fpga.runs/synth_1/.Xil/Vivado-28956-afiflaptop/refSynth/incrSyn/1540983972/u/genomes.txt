@@ -1,8 +1,0 @@
-tetris_logic__GB0
-tetris_logic__GB1
-tetris_logic__GB2
-tetris_logic__GB3
-tetris_logic__GB4
-tetris_logic__GB5
-tetris_logic__GB6
-top_module__GC0

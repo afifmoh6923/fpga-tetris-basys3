@@ -8,3 +8,13 @@
     <Process Command="vivado.bat" Owner="patsn" Host="AFIFLAPTOP" Pid="31380" HostCore="16" HostMemory="016312553472">
     </Process>
 </ProcessHandle>
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="patsn" Host="AFIFLAPTOP" Pid="32076" HostCore="16" HostMemory="016312553472">
+    </Process>
+</ProcessHandle>
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="patsn" Host="AFIFLAPTOP" Pid="14088" HostCore="16" HostMemory="016312553472">
+    </Process>
+</ProcessHandle>
