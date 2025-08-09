@@ -24,7 +24,6 @@ logic [15:0] shape_map;
 logic [15:0] shape;
 logic [15:0] shape_map1;
 logic [19:0] rows_to_clear;
-int write_row;
 
 logic down_prev, left_prev, right_prev, rott_prev;
 logic down_edge, left_edge, right_edge, rott_edge;
@@ -41,15 +40,6 @@ assign left_edge = left && !left_prev;
 assign right_edge = right && !right_prev;
 assign rott_edge = rott && !rott_prev;
 
-reg [6:0] lfsr;
-always @(posedge gm_clk) begin
-    if (gm_rst) begin
-        lfsr <= 7'b1010101; // Reset LFSR to a non-zero value
-    end else begin
-        lfsr <= {lfsr[5:0], lfsr[6] ^ lfsr[5]}; // LFSR feedback
-    end
-end
-
 function logic [15:0] get_shape(input [2:0] piece_type, input [1:0] piece_rot);
     // Return the shape of the piece based on its type and rotation
     // This function should return a 4x4 array representing the piece)
@@ -58,7 +48,7 @@ function logic [15:0] get_shape(input [2:0] piece_type, input [1:0] piece_rot);
         3'b000: begin // I
             case(piece_rot)
                 2'b00, 2'b10: get_shape = 16'b0000111100000000; // Horizontal
-                2'b01, 2'b11: get_shape = 16'b0010001000100010; // Vertical
+                2'b01, 2'b11: get_shape = 16'b0100010001000100; // Vertical
                 default: get_shape = 16'b0000000000000000;
             endcase
         end
@@ -69,10 +59,10 @@ function logic [15:0] get_shape(input [2:0] piece_type, input [1:0] piece_rot);
         end
         3'b010: begin // T
             case(piece_rot)
-                2'b00: get_shape = 16'b1110010000000000;
-                2'b01: get_shape = 16'b0001001100010000;
-                2'b10: get_shape = 16'b0000000000100111;
-                2'b11: get_shape = 16'b0000100011001000;
+                2'b00: get_shape = 16'b0000010011100000;
+                2'b01: get_shape = 16'b0000010001100100;
+                2'b10: get_shape = 16'b0000000011101000;
+                2'b11: get_shape = 16'b0000010011000100;
                 default: get_shape = 16'b0000000000000000;
             endcase
         end
@@ -87,10 +77,10 @@ function logic [15:0] get_shape(input [2:0] piece_type, input [1:0] piece_rot);
         end
         3'b100: begin // J
             case(piece_rot)
-                2'b00: get_shape = 16'b0010001001100000;
-                2'b01: get_shape = 16'b0000010001110000;
-                2'b10: get_shape = 16'b0110010001000000;
-                2'b11: get_shape = 16'b0111000100000000;
+                2'b00: get_shape = 16'b0000001001000110;
+                2'b01: get_shape = 16'b0000000011101000;
+                2'b10: get_shape = 16'b0000110001001000;
+                2'b11: get_shape = 16'b0000001011100000;
                 default: get_shape = 16'b0000000000000000;
             endcase
         end
@@ -122,7 +112,7 @@ function logic check_collision(input [2:0] piece_type, input [1:0]piece_rot, inp
             if(shape_map[15 - (i*4 + j)]) begin
                 automatic int grid_x = piece_x + j;
                 automatic int grid_y = piece_y + i;
-                if (grid_x < 0 || grid_x >= 10 || grid_y >= 20) begin
+                if (grid_x < 0 || grid_x > 9 || grid_y > 19) begin
                     return 1; // Out of bounds
                 end
                 if (grid_y >= 0 && gm_memory[grid_y][grid_x] != 4'b0) begin
@@ -164,11 +154,11 @@ always @(posedge gm_clk) begin
                 gm_state <= 3'b001; // Move to next state
             end
             3'b001: begin //SPAWN
-                active_block <= lfsr[2:0]; // Random block
+                active_block <= active_block + 1; // Random block
                 rotate <= 2'b00; // Reset rotation
-                active_x <= 4'd3; // Center the block
+                active_x <= 4'd4; // Center the block
                 active_y <= 5'd0; // Start at the top
-                if(check_collision(lfsr[2:0], 2'b00, 4'd3, 5'd0)) begin
+                if(check_collision(active_block + 1, 2'b00, 4'd4, 5'd0)) begin
                     gm_state <= 3'b101;
                 end else begin
                     gm_state <= 3'b010;
@@ -193,7 +183,7 @@ always @(posedge gm_clk) begin
             end
             3'b011: begin //LANDING
                 automatic logic [15:0] landed_shape = get_shape(active_block, rotate);
-                automatic logic [4:0] lines_cleared;
+                
                 for (int i = 0; i < 4; i++) begin
                     for (int j = 0; j < 4; j++) begin
                         if (landed_shape[15 - (i*4 + j)]) begin
@@ -202,48 +192,50 @@ always @(posedge gm_clk) begin
                         end
                     end
                 end
+                gm_state <= 3'b100;
+            end
+            3'b100: begin //CLEAR LINES
+                // This is a simplified but synthesizable line clear.
+                automatic logic [4:0] lines_cleared = 0;
+                automatic logic [3:0] new_grid [19:0][9:0];
+                automatic int write_row = 19;
 
-                lines_cleared = 0;
-                
-                // Compact grid by copying non-complete rows
-                write_row = 19;
+                // First, create a temporary blank grid.
+                for (int i = 0; i < 20; i++) begin
+                    for (int j = 0; j < 10; j++) begin
+                        new_grid[i][j] = 4'h0;
+                    end
+                end
+
+                // Second, copy only the non-full rows from the bottom up.
                 for (int read_row = 19; read_row >= 0; read_row--) begin
-                    logic line_complete = 1;
-                    
-                    // Check if this row is complete
+                    automatic logic line_full = 1'b1;
                     for (int col = 0; col < 10; col++) begin
-                        if (gm_memory[read_row][col] == 4'b0) begin
-                            line_complete = 0;
+                        if (gm_memory[read_row][col] == 4'h0) begin
+                            line_full = 1'b0;
                         end
                     end
-                    
-                    if (!line_complete) begin
-                        // Keep this row - copy it to write position
+
+                    if (!line_full) begin
+                        // If the row is not full, copy it down to the 'write_row' position.
                         for (int col = 0; col < 10; col++) begin
-                            gm_memory[write_row][col] <= gm_memory[read_row][col];
+                            new_grid[write_row][col] = gm_memory[read_row][col];
                         end
-                        write_row = write_row - 1;
+                        write_row = write_row - 1; // Move the write position up.
                     end else begin
-                        // This row is complete - don't copy it (effectively delete it)
                         lines_cleared = lines_cleared + 1;
                     end
                 end
                 
-                // Clear the remaining top rows
-                for (int row = 0; row <= write_row; row++) begin
-                    for (int col = 0; col < 10; col++) begin
-                        gm_memory[row][col] <= 4'b0;
-                    end
-                end
-                
-                // Update score based on lines cleared
+                // Third, update the score and the main grid memory.
                 if (lines_cleared > 0) begin
-                    gm_score <= gm_score + (lines_cleared * lines_cleared * 100);
+                    gm_memory <= new_grid;
+                    gm_score  <= gm_score + (lines_cleared * lines_cleared * 100);
                 end
-                
-                gm_state <= 3'b001; // Spawn next piece
+
+                // Finally, ALWAYS go back to spawn a new piece.
+                gm_state <= 3'b001;
             end
-                
             3'b101: begin //GAME OVER
                 if(gm_rst) begin
                     gm_state <= 3'b000; // Go to initialization on reset

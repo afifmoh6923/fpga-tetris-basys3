@@ -4,12 +4,12 @@ module debounce (
     output logic clean
 );
 
-logic [2:0] shift_reg;
+logic [15:0] shift_reg;
 
 always @(posedge clk) begin
-    shift_reg <= {shift_reg[1:0], noisy};
+    shift_reg <= {shift_reg[14:0], noisy};
 end
 
-assign clean = (shift_reg == 3'b111) ? 1 : 0;
+assign clean = (shift_reg == 16'hFFFF) ? 1 : 0;
 
 endmodule

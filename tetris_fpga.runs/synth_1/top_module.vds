@@ -3,8 +3,8 @@
 # SW Build 6140274 on Thu May 22 00:12:29 MDT 2025
 # IP Build 6138677 on Thu May 22 03:10:11 MDT 2025
 # SharedData Build 6139179 on Tue May 20 17:58:58 MDT 2025
-# Start of session at: Thu Aug  7 13:30:10 2025
-# Process ID         : 30128
+# Start of session at: Fri Aug  8 20:21:43 2025
+# Process ID         : 28956
 # Current directory  : C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/tetris_fpga.runs/synth_1
 # Command line       : vivado.exe -log top_module.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source top_module.tcl
 # Log file           : C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/tetris_fpga.runs/synth_1/top_module.vds
@@ -17,12 +17,12 @@
 # CPU Physical cores : 8
 # CPU Logical cores  : 16
 # Host memory        : 16312 MB
-# Swap memory        : 30764 MB
-# Total Virtual      : 47076 MB
-# Available Virtual  : 24521 MB
+# Swap memory        : 9663 MB
+# Total Virtual      : 25976 MB
+# Available Virtual  : 4757 MB
 #-----------------------------------------------------------
 source top_module.tcl -notrace
-create_project: Time (s): cpu = 00:00:11 ; elapsed = 00:00:09 . Memory (MB): peak = 543.203 ; gain = 249.812
+create_project: Time (s): cpu = 00:00:12 ; elapsed = 00:00:09 . Memory (MB): peak = 541.344 ; gain = 244.293
 Command: read_checkpoint -auto_incremental -incremental C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/tetris_fpga.srcs/utils_1/imports/synth_1/top_module.dcp
 INFO: [Vivado 12-5825] Read reference checkpoint from C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/tetris_fpga.srcs/utils_1/imports/synth_1/top_module.dcp for incremental synthesis
 INFO: [Vivado 12-7989] Please ensure there are no constraint changes
@@ -33,9 +33,9 @@ INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35t
 INFO: [Device 21-403] Loading part xc7a35tcpg236-1
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 7928
+INFO: [Synth 8-7075] Helper process launched with PID 29952
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 1228.113 ; gain = 492.586
+Starting RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 1226.957 ; gain = 492.039
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-6157] synthesizing module 'top_module' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/top_module.sv:1]
 INFO: [Synth 8-6157] synthesizing module 'clock_divider' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/clock_divider.sv:1]
@@ -45,7 +45,7 @@ INFO: [Synth 8-6157] synthesizing module 'clock_divider__parameterized0' [C:/Use
 	Parameter DIVIDE_BY bound to: 100000 - type: integer 
 INFO: [Synth 8-6155] done synthesizing module 'clock_divider__parameterized0' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/clock_divider.sv:1]
 INFO: [Synth 8-6157] synthesizing module 'clock_divider__parameterized1' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/clock_divider.sv:1]
-	Parameter DIVIDE_BY bound to: 1666667 - type: integer 
+	Parameter DIVIDE_BY bound to: 10000000 - type: integer 
 INFO: [Synth 8-6155] done synthesizing module 'clock_divider__parameterized1' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/clock_divider.sv:1]
 INFO: [Synth 8-6157] synthesizing module 'debounce' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/debounce.sv:1]
 INFO: [Synth 8-6155] done synthesizing module 'debounce' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/debounce.sv:1]
@@ -59,291 +59,12 @@ INFO: [Synth 8-6155] done synthesizing module 'score_display' (0#1) [C:/Users/pa
 INFO: [Synth 8-6157] synthesizing module 'block_renderer' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/block_renderer.sv:1]
 INFO: [Synth 8-6155] done synthesizing module 'block_renderer' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/block_renderer.sv:1]
 INFO: [Synth 8-6157] synthesizing module 'tetris_logic' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:1]
-INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:60]
-INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:72]
-INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:81]
-INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:90]
-INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:99]
-INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:106]
+INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:49]
+INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:61]
+INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:70]
+INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:79]
+INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:88]
+INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:95]
 INFO: [Synth 8-6155] done synthesizing module 'tetris_logic' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:1]
 INFO: [Synth 8-6155] done synthesizing module 'top_module' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/top_module.sv:1]
-WARNING: [Synth 8-6014] Unused sequential element lines_cleared_reg was removed.  [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:209]
-WARNING: [Synth 8-6014] Unused sequential element write_row_reg was removed.  [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:210]
----------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:33 ; elapsed = 00:00:36 . Memory (MB): peak = 2169.508 ; gain = 1433.980
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Handling Custom Attributes
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:36 ; elapsed = 00:00:39 . Memory (MB): peak = 2169.508 ; gain = 1433.980
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:36 ; elapsed = 00:00:39 . Memory (MB): peak = 2169.508 ; gain = 1433.980
----------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 2169.508 ; gain = 0.000
-INFO: [Project 1-570] Preparing netlist for logic optimization
-
-Processing XDC Constraints
-Initializing timing engine
-Parsing XDC File [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/constraints/basys3.xdc]
-Finished Parsing XDC File [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/constraints/basys3.xdc]
-INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/constraints/basys3.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/top_module_propImpl.xdc].
-Resolution: To avoid this warning, move constraints listed in [.Xil/top_module_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
-Completed Processing XDC Constraints
-
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.030 . Memory (MB): peak = 2277.457 ; gain = 0.000
-INFO: [Project 1-111] Unisim Transformation Summary:
-No Unisim elements were transformed.
-
-Constraint Validation Runtime : Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.188 . Memory (MB): peak = 2277.457 ; gain = 0.000
----------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:01:06 ; elapsed = 00:01:09 . Memory (MB): peak = 2277.457 ; gain = 1541.930
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Loading Part and Timing Information
----------------------------------------------------------------------------------
-Loading part: xc7a35tcpg236-1
----------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:01:06 ; elapsed = 00:01:09 . Memory (MB): peak = 2277.457 ; gain = 1541.930
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Applying 'set_property' XDC Constraints
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:01:06 ; elapsed = 00:01:09 . Memory (MB): peak = 2277.457 ; gain = 1541.930
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Preparing Guide Design
----------------------------------------------------------------------------------
-WARNING: [Synth 8-6702] IncrSynth : Design change found in an area of the design that prevents previous synthesis information being used, Reverting to default synthesis
----------------------------------------------------------------------------------
-Finished Doing Graph Differ : Time (s): cpu = 00:01:15 ; elapsed = 00:01:19 . Memory (MB): peak = 2289.270 ; gain = 1553.742
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Preparing Guide Design : Time (s): cpu = 00:01:15 ; elapsed = 00:01:19 . Memory (MB): peak = 2289.270 ; gain = 1553.742
----------------------------------------------------------------------------------
-INFO: [Synth 8-802] inferred FSM for state register 'gm_state_reg' in module 'tetris_logic'
----------------------------------------------------------------------------------------------------
-                   State |                     New Encoding |                Previous Encoding 
----------------------------------------------------------------------------------------------------
-                  iSTATE |                              000 |                              000
-                 iSTATE0 |                              001 |                              001
-                 iSTATE4 |                              010 |                              101
-                 iSTATE3 |                              011 |                              010
-                 iSTATE1 |                              100 |                              011
-                 iSTATE2 |                              101 |                              100
----------------------------------------------------------------------------------------------------
-INFO: [Synth 8-3354] encoded FSM with state register 'gm_state_reg' using encoding 'sequential' in module 'tetris_logic'
----------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:02:30 ; elapsed = 00:02:42 . Memory (MB): peak = 2289.270 ; gain = 1553.742
----------------------------------------------------------------------------------
-
-
-Incremental Synthesis Report Summary:
-
-1. Incremental synthesis run: no
-
-   Reason for not running incremental synthesis : Design change found in an area of the design that prevents previous synthesis information being used
-
-
-INFO: [Synth 8-7130] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
----------------------------------------------------------------------------------
-Start RTL Component Statistics 
----------------------------------------------------------------------------------
-Detailed RTL Component Info : 
-+---Adders : 
-	   2 Input   32 Bit       Adders := 20    
-	   2 Input   21 Bit       Adders := 1     
-	   2 Input   17 Bit       Adders := 1     
-	   2 Input   10 Bit       Adders := 2     
-	   2 Input    6 Bit       Adders := 6     
-	   2 Input    5 Bit       Adders := 11    
-	  20 Input    5 Bit       Adders := 1     
-	   2 Input    4 Bit       Adders := 3     
-	   2 Input    2 Bit       Adders := 3     
-+---XORs : 
-	   2 Input      1 Bit         XORs := 1     
-+---Registers : 
-	               21 Bit    Registers := 1     
-	               17 Bit    Registers := 1     
-	               16 Bit    Registers := 1     
-	               10 Bit    Registers := 2     
-	                7 Bit    Registers := 1     
-	                5 Bit    Registers := 1     
-	                4 Bit    Registers := 201   
-	                3 Bit    Registers := 5     
-	                2 Bit    Registers := 3     
-	                1 Bit    Registers := 5     
-+---Muxes : 
-	   2 Input   32 Bit        Muxes := 1     
-	   6 Input   16 Bit        Muxes := 2     
-	   8 Input   16 Bit        Muxes := 1     
-	   4 Input   16 Bit        Muxes := 2     
-	   2 Input   16 Bit        Muxes := 3     
-	   4 Input   15 Bit        Muxes := 4     
-	   2 Input   14 Bit        Muxes := 2     
-	   2 Input   11 Bit        Muxes := 4     
-	   2 Input   10 Bit        Muxes := 2     
-	   6 Input    5 Bit        Muxes := 2     
-	   2 Input    5 Bit        Muxes := 1     
-	   2 Input    4 Bit        Muxes := 10818 
-	   6 Input    4 Bit        Muxes := 192   
-	   4 Input    4 Bit        Muxes := 2     
-	   6 Input    3 Bit        Muxes := 2     
-	   2 Input    3 Bit        Muxes := 1     
-	   8 Input    3 Bit        Muxes := 1     
-	   6 Input    2 Bit        Muxes := 1     
-	   2 Input    2 Bit        Muxes := 18    
-	   2 Input    1 Bit        Muxes := 6543  
-	   6 Input    1 Bit        Muxes := 207   
-	   3 Input    1 Bit        Muxes := 170   
----------------------------------------------------------------------------------
-Finished RTL Component Statistics 
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Part Resource Summary
----------------------------------------------------------------------------------
-Part Resources:
-DSPs: 90 (col length:60)
-BRAMs: 100 (col length: RAMB18 60 RAMB36 30)
----------------------------------------------------------------------------------
-Finished Part Resource Summary
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Cross Boundary and Area Optimization
----------------------------------------------------------------------------------
-INFO: [Synth 8-4471] merging register 'gm_score_reg[15:0]' into 'gm_score_reg[15:0]' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:160]
-INFO: [Synth 8-5544] ROM "get_shape" won't be mapped to Block RAM because address size (3) smaller than threshold (5)
-INFO: [Synth 8-5544] ROM "get_shape0" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
-INFO: [Synth 8-5544] ROM "get_shape0" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
-INFO: [Synth 8-5544] ROM "get_shape0" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
-INFO: [Synth 8-5544] ROM "get_shape0" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
-INFO: [Synth 8-5544] ROM "get_shape0" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
-INFO: [Synth 8-5544] ROM "get_shape0" won't be mapped to Block RAM because address size (2) smaller than threshold (5)
----------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:04:12 ; elapsed = 00:04:44 . Memory (MB): peak = 2289.270 ; gain = 1553.742
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Applying XDC Timing Constraints
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:04:22 ; elapsed = 00:04:54 . Memory (MB): peak = 2289.270 ; gain = 1553.742
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Timing Optimization
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:04:33 ; elapsed = 00:05:05 . Memory (MB): peak = 2289.270 ; gain = 1553.742
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Technology Mapping
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:04:50 ; elapsed = 00:05:25 . Memory (MB): peak = 2289.270 ; gain = 1553.742
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start IO Insertion
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Flattening Before IO Insertion
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Flattening Before IO Insertion
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Final Netlist Cleanup
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Final Netlist Cleanup
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:04:58 ; elapsed = 00:05:33 . Memory (MB): peak = 2289.270 ; gain = 1553.742
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Renaming Generated Instances
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:04:58 ; elapsed = 00:05:33 . Memory (MB): peak = 2289.270 ; gain = 1553.742
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Rebuilding User Hierarchy
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:04:59 ; elapsed = 00:05:35 . Memory (MB): peak = 2289.270 ; gain = 1553.742
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Renaming Generated Ports
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:04:59 ; elapsed = 00:05:35 . Memory (MB): peak = 2289.270 ; gain = 1553.742
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Handling Custom Attributes
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:05:01 ; elapsed = 00:05:36 . Memory (MB): peak = 2289.270 ; gain = 1553.742
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Renaming Generated Nets
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:05:01 ; elapsed = 00:05:36 . Memory (MB): peak = 2289.270 ; gain = 1553.742
----------------------------------------------------------------------------------
----------------------------------------------------------------------------------
-Start Writing Synthesis Report
----------------------------------------------------------------------------------
-
-Report BlackBoxes: 
-+-+--------------+----------+
-| |BlackBox name |Instances |
-+-+--------------+----------+
-+-+--------------+----------+
-
-Report Cell Usage: 
-+------+-------+------+
-|      |Cell   |Count |
-+------+-------+------+
-|1     |BUFG   |     2|
-|2     |CARRY4 |   311|
-|3     |LUT1   |   555|
-|4     |LUT2   |  1521|
-|5     |LUT3   |  3358|
-|6     |LUT4   |  2252|
-|7     |LUT5   |  3318|
-|8     |LUT6   |  7723|
-|9     |MUXF7  |   638|
-|10    |MUXF8  |   123|
-|11    |FDCE   |    22|
-|12    |FDRE   |   970|
-|13    |FDSE   |     4|
-|14    |IBUF   |     6|
-|15    |OBUF   |    25|
-+------+-------+------+
----------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:05:01 ; elapsed = 00:05:36 . Memory (MB): peak = 2289.270 ; gain = 1553.742
----------------------------------------------------------------------------------
-Synthesis finished with 0 errors, 0 critical warnings and 1 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:04:09 ; elapsed = 00:05:22 . Memory (MB): peak = 2289.270 ; gain = 1445.793
-Synthesis Optimization Complete : Time (s): cpu = 00:05:01 ; elapsed = 00:05:37 . Memory (MB): peak = 2289.270 ; gain = 1553.742
-INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.211 . Memory (MB): peak = 2295.531 ; gain = 0.000
-INFO: [Netlist 29-17] Analyzing 1072 Unisim elements for replacement
-INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
-WARNING: [Netlist 29-101] Netlist 'top_module' is not ideal for floorplanning, since the cellview 'tetris_logic' contains a large number of primitives.  Please consider enabling hierarchy in synthesis if you want to do floorplanning.
-INFO: [Project 1-570] Preparing netlist for logic optimization
-INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.010 . Memory (MB): peak = 2300.258 ; gain = 0.000
-INFO: [Project 1-111] Unisim Transformation Summary:
-No Unisim elements were transformed.
-
-Synth Design complete | Checksum: 4b8c6384
-INFO: [Common 17-83] Releasing license: Synthesis
-55 Infos, 4 Warnings, 0 Critical Warnings and 0 Errors encountered.
-synth_design completed successfully
-synth_design: Time (s): cpu = 00:05:09 ; elapsed = 00:05:48 . Memory (MB): peak = 2300.258 ; gain = 1750.508
-Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.049 . Memory (MB): peak = 2300.258 ; gain = 0.000
-INFO: [Common 17-1381] The checkpoint 'C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/tetris_fpga.runs/synth_1/top_module.dcp' has been generated.
-write_checkpoint: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2300.258 ; gain = 0.000
-INFO: [Vivado 12-24828] Executing command : report_utilization -file top_module_utilization_synth.rpt -pb top_module_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Thu Aug  7 13:36:20 2025...
+WARNING: [Synth 8-6014] Unused sequential element shape_map_reg was removed.  [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:108]

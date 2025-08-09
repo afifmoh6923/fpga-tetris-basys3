@@ -1,0 +1,125 @@
+#-----------------------------------------------------------
+# Vivado v2025.1 (64-bit)
+# SW Build 6140274 on Thu May 22 00:12:29 MDT 2025
+# IP Build 6138677 on Thu May 22 03:10:11 MDT 2025
+# SharedData Build 6139179 on Tue May 20 17:58:58 MDT 2025
+# Start of session at: Fri Aug  8 19:20:41 2025
+# Process ID         : 10872
+# Current directory  : C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/tetris_fpga.runs/synth_1
+# Command line       : vivado.exe -log top_module.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source top_module.tcl
+# Log file           : C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/tetris_fpga.runs/synth_1/top_module.vds
+# Journal file       : C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/tetris_fpga.runs/synth_1\vivado.jou
+# Running On         : afiflaptop
+# Platform           : Windows Server 2016 or Windows 10
+# Operating System   : 26100
+# Processor Detail   : AMD Ryzen 9 7940HS with Radeon 780M Graphics
+# CPU Frequency      : 3992 MHz
+# CPU Physical cores : 8
+# CPU Logical cores  : 16
+# Host memory        : 16312 MB
+# Swap memory        : 9663 MB
+# Total Virtual      : 25976 MB
+# Available Virtual  : 12599 MB
+#-----------------------------------------------------------
+source top_module.tcl -notrace
+create_project: Time (s): cpu = 00:00:16 ; elapsed = 00:00:12 . Memory (MB): peak = 541.605 ; gain = 249.195
+Command: read_checkpoint -auto_incremental -incremental C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/tetris_fpga.srcs/utils_1/imports/synth_1/top_module.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/tetris_fpga.srcs/utils_1/imports/synth_1/top_module.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top top_module -part xc7a35tcpg236-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35t'
+INFO: [Device 21-403] Loading part xc7a35tcpg236-1
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 25632
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 1226.363 ; gain = 492.379
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'top_module' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/top_module.sv:1]
+INFO: [Synth 8-6157] synthesizing module 'clock_divider' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/clock_divider.sv:1]
+	Parameter DIVIDE_BY bound to: 4 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'clock_divider' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/clock_divider.sv:1]
+INFO: [Synth 8-6157] synthesizing module 'clock_divider__parameterized0' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/clock_divider.sv:1]
+	Parameter DIVIDE_BY bound to: 100000 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'clock_divider__parameterized0' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/clock_divider.sv:1]
+INFO: [Synth 8-6157] synthesizing module 'clock_divider__parameterized1' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/clock_divider.sv:1]
+	Parameter DIVIDE_BY bound to: 10000000 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'clock_divider__parameterized1' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/clock_divider.sv:1]
+INFO: [Synth 8-6157] synthesizing module 'debounce' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/debounce.sv:1]
+INFO: [Synth 8-6155] done synthesizing module 'debounce' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/debounce.sv:1]
+INFO: [Synth 8-6157] synthesizing module 'vga_controller' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/vga_controller.sv:1]
+INFO: [Synth 8-6155] done synthesizing module 'vga_controller' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/vga_controller.sv:1]
+INFO: [Synth 8-6157] synthesizing module 'score_display' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/score_display.sv:1]
+INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/score_display.sv:30]
+INFO: [Synth 8-6157] synthesizing module 'segment_decoder' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/segment_decoder.sv:1]
+INFO: [Synth 8-6155] done synthesizing module 'segment_decoder' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/segment_decoder.sv:1]
+INFO: [Synth 8-6155] done synthesizing module 'score_display' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/score_display.sv:1]
+INFO: [Synth 8-6157] synthesizing module 'block_renderer' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/block_renderer.sv:1]
+INFO: [Synth 8-6155] done synthesizing module 'block_renderer' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/block_renderer.sv:1]
+INFO: [Synth 8-6157] synthesizing module 'tetris_logic' [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:1]
+INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:50]
+INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:62]
+INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:71]
+INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:80]
+INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:89]
+INFO: [Synth 8-226] default block is never used [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:96]
+INFO: [Synth 8-6155] done synthesizing module 'tetris_logic' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:1]
+INFO: [Synth 8-6155] done synthesizing module 'top_module' (0#1) [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/top_module.sv:1]
+WARNING: [Synth 8-6014] Unused sequential element shape_map_reg was removed.  [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:109]
+WARNING: [Synth 8-6014] Unused sequential element write_row_reg was removed.  [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/src/tetris_logic.sv:200]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:35 ; elapsed = 00:00:38 . Memory (MB): peak = 2065.395 ; gain = 1331.410
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:37 ; elapsed = 00:00:40 . Memory (MB): peak = 2065.395 ; gain = 1331.410
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:37 ; elapsed = 00:00:40 . Memory (MB): peak = 2065.395 ; gain = 1331.410
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:03 ; elapsed = 00:00:02 . Memory (MB): peak = 2065.395 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/constraints/basys3.xdc]
+Finished Parsing XDC File [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/constraints/basys3.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/patsn/OneDrive/Documents/fpga-projects/fpga-tetris-basys3/constraints/basys3.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/top_module_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/top_module_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.025 . Memory (MB): peak = 2131.059 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.158 . Memory (MB): peak = 2131.059 ; gain = 0.000
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:01:07 ; elapsed = 00:01:10 . Memory (MB): peak = 2131.059 ; gain = 1397.074
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a35tcpg236-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:01:07 ; elapsed = 00:01:10 . Memory (MB): peak = 2131.059 ; gain = 1397.074
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:01:07 ; elapsed = 00:01:10 . Memory (MB): peak = 2131.059 ; gain = 1397.074
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Preparing Guide Design
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Doing Graph Differ : Time (s): cpu = 00:01:15 ; elapsed = 00:01:20 . Memory (MB): peak = 2231.855 ; gain = 1497.871
+---------------------------------------------------------------------------------
+top_module__GC0tetris_logic__GB6tetris_logic__GB5tetris_logic__GB4tetris_logic__GB3tetris_logic__GB2tetris_logic__GB1tetris_logic__GB0---------------------------------------------------------------------------------
+Finished Preparing Guide Design : Time (s): cpu = 00:01:19 ; elapsed = 00:01:24 . Memory (MB): peak = 2231.855 ; gain = 1497.871
+---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'gm_state_reg' in module 'tetris_logic'
