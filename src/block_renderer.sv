@@ -18,7 +18,7 @@ assign cell_y = curr_pix_y / BLOCK_SIZE;
 logic [3:0] cell_color;
 
 always_comb begin
-    if((curr_pix_x >= GRID_START_X - GRID_BORDER && curr_pix_x < GRID_START_X) || (curr_pix_x >= GRID_START_X + GRID_WIDTH && curr_pix_x < GRID_START_X + GRID_WIDTH + GRID_BORDER) || (curr_pix_y >= GRID_HEIGHT && curr_pix_y < GRID_HEIGHT + GRID_BORDER)) begin
+    if((curr_pix_x >= GRID_START_X - GRID_BORDER && curr_pix_x < GRID_START_X) || (curr_pix_x >= GRID_START_X + GRID_WIDTH && curr_pix_x < GRID_START_X + GRID_WIDTH + GRID_BORDER) || (curr_pix_y < GRID_BORDER) || (curr_pix_y >= GRID_HEIGHT && curr_pix_y < GRID_HEIGHT + GRID_BORDER)) begin
             pixel_color = 12'hF00; // Border color
     end else if (curr_pix_x >= GRID_START_X && curr_pix_x < GRID_START_X + GRID_WIDTH) begin
         cell_color = game_grid_array[cell_y][cell_x];

@@ -17,7 +17,7 @@ reg [3:0] gm_memory [19:0][9:0];
 
 reg [2:0] active_block;
 reg [1:0] rotate;
-reg [3:0] active_x;
+logic signed [3:0] active_x;
 reg [4:0] active_y;
 reg [4:0] fall_timer_counter;
 logic fall_tick;
@@ -90,70 +90,118 @@ endfunction
 always_ff @(posedge gm_clk) begin
     if (gm_rst) begin
         gm_state <= 3'b000;
-        fall_timer_counter <= 0;
-        fall_tick <= 0;
     end else begin
-        fall_timer_counter <= (fall_timer_counter == FALL_SPEED-1) ? 0 : fall_timer_counter + 1;
-        fall_tick <= (fall_timer_counter == FALL_SPEED-1);
+        if(gm_state == 3'b010) begin
+            if (fall_tick) fall_timer_counter <= 0;
+            else fall_timer_counter <= fall_timer_counter + 1;
+        end else begin
+            fall_timer_counter <= 0;
+        end
 
         case(gm_state)
             3'b000: begin // INIT - sequential clear instead of nested for
-                static int clr_row = 0, clr_col = 0;
-                gm_memory[clr_row][clr_col] <= 4'b0;
-                if (clr_col == 9) begin
-                    clr_col <= 0;
-                    if (clr_row == 19) begin
-                        clr_row <= 0;
-                        gm_score <= 0;
-                        gm_state <= 3'b001;
-                    end else clr_row <= clr_row + 1;
-                end else clr_col <= clr_col + 1;
+                for(int i = 0; i < 20; i++)
+                    for(int j = 0; j < 10; j++)
+                        gm_memory[i][j] <= 4'b0;
+                gm_score <= 16'b0;
+                gm_state <= 3'b001;
             end
             3'b001: begin // SPAWN
                 active_block <= active_block + 1;
                 rotate <= 2'b00;
                 active_x <= 4'd4;
                 active_y <= 5'd0;
-                gm_state <= check_collision(active_block + 1, 2'b00, 4'd4, 5'd0) ? 3'b101 : 3'b010;
+                if (check_collision(active_block + 1, 2'b00, 4'd4, 5'd0))
+                    gm_state <= 3'b101;
+                else
+                    gm_state <= 3'b010;
             end
             3'b010: begin // FALLING
-                if (left_edge && !check_collision(active_block, rotate, active_x - 1, active_y)) active_x <= active_x -1;
-                else if (right_edge && !check_collision(active_block, rotate, active_x + 1, active_y)) active_x <= active_x + 1;
-                else if (rott_edge && !check_collision(active_block, rotate + 1, active_x, active_y)) rotate <= rotate + 1;
-                if (fall_tick || down_edge) begin
-                    if (!check_collision(active_block, rotate, active_x, active_y + 1)) active_y <= active_y + 1;
-                    else gm_state <= 3'b011;
+                automatic logic signed [3:0] next_x = active_x;
+                automatic logic [4:0] next_y = active_y;
+                automatic logic [1:0] next_rot = rotate;
+                automatic logic moved_by_player = 1'b0;
+
+                // --- Step 1: Handle Player Input First ---
+                if (left_edge) begin
+                    next_x = active_x - 1;
+                    moved_by_player = 1'b1;
+                end else if (right_edge) begin
+                    next_x = active_x + 1;
+                    moved_by_player = 1'b1;
+                end else if (rott_edge) begin
+                    next_rot = rotate + 1;
+                    moved_by_player = 1'b1;
+                end
+
+                // --- Step 2: Test the Player's Move ---
+                if (moved_by_player && !check_collision(active_block, next_rot, next_x, active_y)) begin
+                    active_x <= next_x;
+                    rotate <= next_rot;
+                end
+
+                // --- Step 3: Handle Downward Movement ---
+                if (fall_tick || down) begin // Use continuous 'down' for soft drop
+                    next_y = active_y + 1;
+                    if (!check_collision(active_block, rotate, active_x, next_y)) begin
+                        active_y <= next_y; // Keep falling
+                    end else begin
+                        gm_state <= 3'b011; // Piece has landed
+                    end
                 end
             end
-            3'b011: begin // LANDING
+            3'b011: begin // LANDED
                 automatic logic [15:0] landed_shape = get_shape(active_block, rotate);
-                for (int i = 0; i < 4; i++)
-                    for (int j = 0; j < 4; j++)
-                        if (landed_shape[15 - (i*4 + j)] && active_y + i >= 0)
+                for (int i = 0; i < 4; i++) begin
+                    for (int j = 0; j < 4; j++) begin
+                        if (landed_shape[15 - (i*4) - j] && active_y + i < 20) begin
                             gm_memory[active_y + i][active_x + j] <= active_block + 1;
+                        end
+                    end
+                end
                 gm_state <= 3'b100;
             end
             3'b100: begin // CLEAR LINES - sequential copy approach could be added here if needed
                 automatic int write_row = 19;
-                for (int read_row = 19; read_row >= 0; read_row--) begin
-                    automatic bit line_full = 1;
-                    for (int col = 0; col < 10; col++)
-                        if (gm_memory[read_row][col] == 4'h0) line_full = 0;
-                    if (!line_full) begin
-                        if (write_row != read_row)
-                            for (int col = 0; col < 10; col++)
-                                gm_memory[write_row][col] <= gm_memory[read_row][col];
-                        write_row--;
-                    end else gm_score <= gm_score + 100;
-                end
-                for (int r = 0; r < 20; r++) begin
-                // The 'if' statement provides the variable control.
-                    if (r <= write_row) begin
-                        for (int c = 0; c < 10; c++) begin
-                            gm_memory[r][c] <= 4'b0;
-                        end
+                automatic int lines_cleared = 0;
+                automatic logic [3:0] new_grid [19:0][9:0];
+
+                
+                // Pass 1: Create a temporary grid that is completely empty.
+                for (int i = 0; i < 20; i++) begin
+                    for (int j = 0; j < 10; j++) begin
+                        new_grid[i][j] = 4'h0;
                     end
                 end
+
+                // Pass 2: Copy only the non-full rows from the old grid to the new one.
+                for (int read_row = 19; read_row >= 0; read_row--) begin
+                    automatic bit line_is_full = 1'b1;
+                    for (int col = 0; col < 10; col++) begin
+                        if (gm_memory[read_row][col] == 4'h0) begin
+                            line_is_full = 1'b0;
+                        end
+                    end
+
+                    if (!line_is_full) begin
+                        // If the row is not full, copy it to the 'write_row' position.
+                        for (int col = 0; col < 10; col++) begin
+                            new_grid[write_row][col] = gm_memory[read_row][col];
+                        end
+                        write_row = write_row - 1; // Move the write position up.
+                    end else begin
+                        lines_cleared = lines_cleared + 1;
+                    end
+                end
+                
+                // Update the main grid and score if any lines were cleared.
+                if (lines_cleared > 0) begin
+                    gm_memory <= new_grid;
+                    gm_score  <= gm_score + (lines_cleared * lines_cleared * 100);
+                end
+
+                // Always go back to SPAWN to continue the game.
+                gm_state <= 3'b001;
             end
             3'b101: begin //GAME OVER
                 if(gm_rst) begin
@@ -180,8 +228,8 @@ always_comb begin
         3'b110: active_color = 4'b0111;
         default: active_color = 4'b0000;
     endcase
-    if (gm_state == 3'b010) begin
-        shape_map1 = get_shape(active_block, rotate);
+    shape_map1 = get_shape(active_block, rotate);
+    if (gm_state == 3'b010 || gm_state == 3'b001) begin
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
                 if(shape_map1[15 - (i*4 + j)] && active_y + i < 20 && active_x + j < 10)

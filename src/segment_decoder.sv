@@ -5,17 +5,18 @@ module segment_decoder (
 
   always_comb begin
     case (digit)
-      4'b0000: seg = 7'b0000001; // "0"  
-      4'b0001: seg = 7'b1001111; // "1" 
-      4'b0010: seg = 7'b0010010; // "2" 
-      4'b0011: seg = 7'b0000110; // "3" 
-      4'b0100: seg = 7'b1001100; // "4" 
-      4'b0101: seg = 7'b0100100; // "5" 
-      4'b0110: seg = 7'b0100000; // "6" 
-      4'b0111: seg = 7'b0001111; // "7" 
-      4'b1000: seg = 7'b0000000; // "8"  
-      4'b1001: seg = 7'b0000100; // "9" 
-      default: seg = 7'b0000001; // "0"
+      // FIX: Correct active-low patterns for segments (G,F,E,D,C,B,A)
+      4'd0: seg = 7'b1000000; // "0"
+      4'd1: seg = 7'b1111001; // "1"
+      4'd2: seg = 7'b0100100; // "2"
+      4'd3: seg = 7'b0110000; // "3"
+      4'd4: seg = 7'b0011001; // "4"
+      4'd5: seg = 7'b0010010; // "5"
+      4'd6: seg = 7'b0000010; // "6"
+      4'd7: seg = 7'b1111000; // "7"
+      4'd8: seg = 7'b0000000; // "8"
+      4'd9: seg = 7'b0010000; // "9"
+      default: seg = 7'b1111111; // Off
     endcase
   end
 
