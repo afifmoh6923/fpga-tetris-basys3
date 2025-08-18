@@ -134,11 +134,12 @@ fpga-tetris/
 
 ---
 
-## 📸 Screenshots (Coming Soon)
+## Notes (Coming Soon)
 
-- Game rendering on VGA
-- Score updates on 7-segment
-- Win/loss state visuals
+- Possible Bugs
+- Unmentioned Additions
+- How to implement
+- How to play
 
 ---
 

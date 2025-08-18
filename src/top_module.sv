@@ -11,9 +11,33 @@ module top_module (
     output logic [6:0] seg
 );
 
+// =====================================================
+    // Gravity clock divider (5 Hz fall tick from 100 MHz)
+    // =====================================================
+    parameter int CLK_HZ     = 100_000_000;
+    parameter int GRAVITY_HZ = 5; // adjust for faster/slower fall
+    localparam int DIV_N     = CLK_HZ / GRAVITY_HZ;
+
+    logic [$clog2(DIV_N)-1:0] grav_cnt;
+    logic grav_ce;
+
+    always_ff @(posedge clk or posedge rst) begin
+        if (rst) begin
+            grav_cnt <= '0;
+            grav_ce  <= 1'b0;
+        end else begin
+            if (grav_cnt == DIV_N-1) begin
+                grav_cnt <= '0;
+                grav_ce  <= 1'b1;
+            end else begin
+                grav_cnt <= grav_cnt + 1;
+                grav_ce  <= 1'b0;
+            end
+        end
+    end
+
 logic slw;
 logic clk_1khz;
-logic clk_10hz;
 logic up_clean, down_clean, left_clean, right_clean;
 logic [9:0] x_pos;
 logic [9:0] y_pos;
@@ -29,10 +53,6 @@ clock_divider #(.DIVIDE_BY(4)) vga_clk(
 clock_divider #(.DIVIDE_BY(100_000)) seg_clk(
     .fast_clock(clk),
     .slow_clock(clk_1khz)
-);
-clock_divider #(.DIVIDE_BY(10_000_000)) game_clk(
-    .fast_clock(clk),
-    .slow_clock(clk_10hz)
 );
 
 debounce db_up(
@@ -82,12 +102,13 @@ block_renderer renderer(
 );
 
 tetris_logic game(
-    .gm_clk(clk_10hz),
+    .gm_clk(clk),
     .gm_rst(rst),
     .left(left_clean),
     .right(right_clean),
     .down(down_clean),
     .rott(up_clean),
+    .grav_ce(grav_ce),
     .grid(game_grid_array),
     .score(score)
 );

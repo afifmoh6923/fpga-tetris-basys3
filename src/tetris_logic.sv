@@ -5,6 +5,7 @@ module tetris_logic (
     input logic gm_clk,
     input logic gm_rst,
     input logic down, left, right, rott,
+    input logic grav_ce,
     output logic [3:0] grid [19:0][9:0],
     output logic [15:0] score
 );
@@ -19,8 +20,6 @@ reg [2:0] active_block;
 reg [1:0] rotate;
 logic signed [3:0] active_x;
 reg [4:0] active_y;
-reg [4:0] fall_timer_counter;
-logic fall_tick;
 logic [3:0] active_color;
 logic [15:0] shape_map;
 logic [15:0] shape_map1;
@@ -49,7 +48,7 @@ function logic [15:0] get_shape(input [2:0] piece_type, input [1:0] piece_rot);
         3'b010: case(piece_rot)
                     2'b00: get_shape = 16'b0000010011100000;
                     2'b01: get_shape = 16'b0000010001100100;
-                    2'b10: get_shape = 16'b0000000011101000;
+                    2'b10: get_shape = 16'b0000000011100100;
                     2'b11: get_shape = 16'b0000010011000100;
                 endcase
         3'b011: case(piece_rot)
@@ -59,7 +58,7 @@ function logic [15:0] get_shape(input [2:0] piece_type, input [1:0] piece_rot);
                     2'b11: get_shape = 16'b0000000101110000;
                 endcase
         3'b100: case(piece_rot)
-                    2'b00: get_shape = 16'b0000001001000110;
+                    2'b00: get_shape = 16'b0000001000100110;
                     2'b01: get_shape = 16'b0000000011101000;
                     2'b10: get_shape = 16'b0000110001001000;
                     2'b11: get_shape = 16'b0000001011100000;
@@ -71,7 +70,7 @@ function logic [15:0] get_shape(input [2:0] piece_type, input [1:0] piece_rot);
 endfunction
 
 // Collision check function
-function logic check_collision(input [2:0] piece_type, input [1:0]piece_rot, input[3:0] piece_x, input [4:0] piece_y);
+function logic check_collision(input [2:0] piece_type, input [1:0]piece_rot, input logic signed[3:0] piece_x, input [4:0] piece_y);
     shape_map = get_shape(piece_type, piece_rot);
     for (int i = 0; i < 4; i++) begin
         for (int j = 0; j < 4; j++) begin
@@ -91,12 +90,6 @@ always_ff @(posedge gm_clk) begin
     if (gm_rst) begin
         gm_state <= 3'b000;
     end else begin
-        if(gm_state == 3'b010) begin
-            if (fall_tick) fall_timer_counter <= 0;
-            else fall_timer_counter <= fall_timer_counter + 1;
-        end else begin
-            fall_timer_counter <= 0;
-        end
 
         case(gm_state)
             3'b000: begin // INIT - sequential clear instead of nested for
@@ -104,14 +97,16 @@ always_ff @(posedge gm_clk) begin
                     for(int j = 0; j < 10; j++)
                         gm_memory[i][j] <= 4'b0;
                 gm_score <= 16'b0;
+                active_block <= 3'b000;
                 gm_state <= 3'b001;
             end
             3'b001: begin // SPAWN
-                active_block <= active_block + 1;
+                if (active_block >= 3'b110) active_block <= 3'b000;
+                else active_block <= active_block + 1;
                 rotate <= 2'b00;
                 active_x <= 4'd4;
                 active_y <= 5'd0;
-                if (check_collision(active_block + 1, 2'b00, 4'd4, 5'd0))
+                if (check_collision(active_block, 2'b00, 4'd4, 5'd0)) // Use current active_block
                     gm_state <= 3'b101;
                 else
                     gm_state <= 3'b010;
@@ -141,7 +136,7 @@ always_ff @(posedge gm_clk) begin
                 end
 
                 // --- Step 3: Handle Downward Movement ---
-                if (fall_tick || down) begin // Use continuous 'down' for soft drop
+                if (grav_ce || down) begin // Use continuous 'down' for soft drop
                     next_y = active_y + 1;
                     if (!check_collision(active_block, rotate, active_x, next_y)) begin
                         active_y <= next_y; // Keep falling
@@ -232,8 +227,8 @@ always_comb begin
     if (gm_state == 3'b010 || gm_state == 3'b001) begin
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
-                if(shape_map1[15 - (i*4 + j)] && active_y + i < 20 && active_x + j < 10)
-                    temp_grid[active_y + i][active_x + j] = active_color;
+                if(shape_map1[15 - (i*4 + j)] && active_y + i < 20 && $signed(active_x) + j >= 0 && $signed(active_x) + j < 10)
+                    temp_grid[active_y + i][$signed(active_x) + j] = active_color;
     end
     grid = temp_grid;
     score = gm_score;
