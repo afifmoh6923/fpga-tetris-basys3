@@ -10,8 +10,6 @@ module tetris_logic (
     output logic [15:0] score
 );
 
-parameter FALL_SPEED = 30;
-
 reg [2:0] gm_state;
 reg [15:0] gm_score;
 reg [3:0] gm_memory [19:0][9:0];
@@ -59,9 +57,9 @@ function logic [15:0] get_shape(input [2:0] piece_type, input [1:0] piece_rot);
                 endcase
         3'b100: case(piece_rot)
                     2'b00: get_shape = 16'b0000001000100110;
-                    2'b01: get_shape = 16'b0000000011101000;
-                    2'b10: get_shape = 16'b0000110001001000;
-                    2'b11: get_shape = 16'b0000001011100000;
+                    2'b01: get_shape = 16'b0000100011100000;
+                    2'b10: get_shape = 16'b0000011001000100;
+                    2'b11: get_shape = 16'b0000000011100010;
                 endcase
         3'b101: get_shape = (piece_rot[0]) ? 16'b0000010001100010 : 16'b0000001101100000;
         3'b110: get_shape = (piece_rot[0]) ? 16'b0000001001100100 : 16'b0000011000110000;
@@ -136,7 +134,7 @@ always_ff @(posedge gm_clk) begin
                 end
 
                 // --- Step 3: Handle Downward Movement ---
-                if (grav_ce || down) begin // Use continuous 'down' for soft drop
+                if (grav_ce || down_edge) begin // Use continuous 'down' for soft drop
                     next_y = active_y + 1;
                     if (!check_collision(active_block, rotate, active_x, next_y)) begin
                         active_y <= next_y; // Keep falling
@@ -149,8 +147,10 @@ always_ff @(posedge gm_clk) begin
                 automatic logic [15:0] landed_shape = get_shape(active_block, rotate);
                 for (int i = 0; i < 4; i++) begin
                     for (int j = 0; j < 4; j++) begin
-                        if (landed_shape[15 - (i*4) - j] && active_y + i < 20) begin
-                            gm_memory[active_y + i][active_x + j] <= active_block + 1;
+                        automatic int gx = $signed(active_x) + j;
+                        automatic int gy = active_y + i;
+                        if (landed_shape[15-(i*4+j)] && gy >= 0 && gy < 20 && gx >= 0 && gx < 10) begin
+                            gm_memory[gy][gx] <= active_block + 1;
                         end
                     end
                 end

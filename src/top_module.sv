@@ -12,31 +12,36 @@ module top_module (
 );
 
 // =====================================================
-    // Gravity clock divider (5 Hz fall tick from 100 MHz)
-    // =====================================================
-    parameter int CLK_HZ     = 100_000_000;
-    parameter int GRAVITY_HZ = 5; // adjust for faster/slower fall
-    localparam int DIV_N     = CLK_HZ / GRAVITY_HZ;
+// Gravity clock divider (2 Hz fall tick from 25 MHz)
+// =====================================================
+parameter int CLK_HZ     = 25_000_000;
+parameter int GRAVITY_HZ = 2; // adjust for faster/slower fall
+localparam int DIV_N     = CLK_HZ / GRAVITY_HZ;
 
-    logic [$clog2(DIV_N)-1:0] grav_cnt;
-    logic grav_ce;
+logic [$clog2(DIV_N)-1:0] grav_cnt;
+logic grav_ce;
+logic slw;
 
-    always_ff @(posedge clk or posedge rst) begin
-        if (rst) begin
+clock_divider #(.DIVIDE_BY(4)) vga_clk(
+    .fast_clock(clk),
+    .slow_clock(slw)
+);
+
+always_ff @(posedge slw or posedge rst) begin
+    if (rst) begin
+        grav_cnt <= '0;
+        grav_ce  <= 1'b0;
+    end else begin
+        if (grav_cnt == DIV_N-1) begin
             grav_cnt <= '0;
-            grav_ce  <= 1'b0;
+            grav_ce  <= 1'b1;
         end else begin
-            if (grav_cnt == DIV_N-1) begin
-                grav_cnt <= '0;
-                grav_ce  <= 1'b1;
-            end else begin
-                grav_cnt <= grav_cnt + 1;
-                grav_ce  <= 1'b0;
-            end
+            grav_cnt <= grav_cnt + 1;
+            grav_ce  <= 1'b0;
         end
     end
+end
 
-logic slw;
 logic clk_1khz;
 logic up_clean, down_clean, left_clean, right_clean;
 logic [9:0] x_pos;
@@ -46,10 +51,7 @@ logic [11:0] rgb;
 logic [3:0] game_grid_array [19:0][9:0]; // Example grid array
 logic [15:0] score;
 
-clock_divider #(.DIVIDE_BY(4)) vga_clk(
-    .fast_clock(clk),
-    .slow_clock(slw)
-);
+
 clock_divider #(.DIVIDE_BY(100_000)) seg_clk(
     .fast_clock(clk),
     .slow_clock(clk_1khz)
@@ -102,7 +104,7 @@ block_renderer renderer(
 );
 
 tetris_logic game(
-    .gm_clk(clk),
+    .gm_clk(slw),
     .gm_rst(rst),
     .left(left_clean),
     .right(right_clean),
